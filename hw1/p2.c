@@ -24,31 +24,36 @@ void swap(int index1, int index2){
     minHeap[index2] = temp;
 }
 
-void Insert(int data){
+void insert(int data){
     int curIndex = ++lastIndex;
     minHeap[curIndex] = data;
     if(curIndex == 0) return;
 
     while(minHeap[curIndex] < minHeap[parentIndex(curIndex)]){
         swap(curIndex, parentIndex(curIndex));
+        curIndex = parentIndex(curIndex);
     }
 }
 
-void Delete(int target){
+void delete(int target){
     int curIndex = -1;
     while(minHeap[++curIndex] != target);
     swap(curIndex, lastIndex--);
     while(true){
-        int temp = minHeap[curIndex];
-        if(minHeap[curIndex] < minHeap[leftIndex(curIndex)] && minHeap[curIndex] < minHeap[rightIndex(curIndex)]){
-            break;
+        int lIndex = leftIndex(curIndex);
+        int rIndex = rightIndex(curIndex);
+        int smallestIndex = curIndex;
+
+        if(lIndex <= lastIndex && minHeap[lIndex] < minHeap[smallestIndex]){
+            smallestIndex = lIndex;
         }
-        if(minHeap[curIndex] < minHeap[leftIndex(curIndex)] && minHeap[curIndex] > minHeap[rightIndex(curIndex)]){
-            swap(curIndex, rightIndex(curIndex));
+        if(rIndex <= lastIndex && minHeap[rIndex] < minHeap[smallestIndex]){
+            smallestIndex = rIndex;
         }
-        else if(minHeap[curIndex] > minHeap[leftIndex(curIndex)] && minHeap[curIndex] < minHeap[rightIndex(curIndex)]){
-            swap(curIndex, leftIndex(curIndex));
-        }
+
+        if(smallestIndex == curIndex) break;
+        swap(curIndex, smallestIndex);
+        curIndex = smallestIndex;
     }
 }
 
@@ -59,10 +64,10 @@ int main(){
         int data;
         scanf("%d", &data);
         if(strcmp(cmd, "insert") == 0){
-            Insert(data);
+            insert(data);
         }
         else if(strcmp(cmd, "delete") == 0){
-            Delete(data);
+            delete(data);
         }
     }
     for(int i = 0; i < lastIndex + 1; i++){

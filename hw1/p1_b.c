@@ -2,38 +2,53 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-typedef struct Stack{
+typedef struct StackNode{
     char data;
-    struct Stack* next;
+    struct StackNode* next;
 } Node;
 
-void insert(Node** head, char data){
+typedef struct Stack{
+    Node* top;
+} Stack;
+
+Stack* newStack(){
+    Stack* stack = malloc(sizeof(Stack));
+    stack->top = NULL;
+    return stack;
+}
+
+bool isEmpty(Stack* stack){
+    return stack->top == NULL;
+}
+
+void insert(Stack* stack, char data){
     Node* newNode = malloc(sizeof(Node));
     newNode->data = data;
-    newNode->next = *head;
-    *head = newNode;
+    newNode->next = stack->top;
+    stack->top = newNode;
 }
 
-char top(Node* head){
-    if(!head) return '\0';
-    return head->data;
-}
-
-char pop(Node** head){
-    if(!*head) return '\0';
-    Node* delNode = *head;
+char pop(Stack* stack){
+    if(isEmpty(stack)) return '\0';
+    Node* delNode = stack->top;
     char returnData = delNode->data;
-    *head = delNode->next;
+    stack->top = delNode->next;
     free(delNode);
     return returnData;
 }
 
-void printStack(Node* head){
-    while(head){
-        printf("%c", head->data);
-        head = head->next;
+char top(Stack* stack){
+    if(isEmpty(stack)) return '\0';
+    return stack->top->data;
+}
+
+void printStack(Stack* stack){
+    Node* curNode = stack->top;
+    while(curNode){
+        printf("%c->", curNode->data);
+        curNode = curNode->next;
     }
-    printf("\n");
+    printf("NULL\n");
 }
 
 bool isOperator(char c){
@@ -50,20 +65,20 @@ int getPriority(char c){
 }
 
 int main(){
-    Node* head = NULL;
+    Stack* stack = newStack();
     char c;
     while((c = getchar()) != EOF && c != '\n'){
         if(isOperator(c)){
-            while(getPriority(top(head)) >= getPriority(c)){
-                printf("%c", pop(&head));
+            while(getPriority(top(stack)) >= getPriority(c)){
+                printf("%c", pop(stack));
             }
-            insert(&head, c);
+            insert(stack, c);
         }
         else{
             printf("%c", c);
         }
     }
-    while(head){
-        printf("%c", pop(&head));
+    while(!isEmpty(stack)){
+        printf("%c", pop(stack));
     }
 }

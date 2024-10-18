@@ -11,7 +11,7 @@ insert 5
 insert 40 
 delete 5 
 Output:
-10 20 21 30 25 40 
+20 21 25 30 40 
 
 Sample 2
 
