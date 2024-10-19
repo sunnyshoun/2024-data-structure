@@ -63,7 +63,7 @@ void printQueue(Queue* queue){
 }
 
 bool visited[10001] = {0};
-bool connect[100][100];
+int connect[100][100];
 int n;
 
 int main(){
