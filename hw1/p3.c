@@ -49,8 +49,7 @@ int dequeue(Queue* queue){
 }
 
 bool isEmpty(Queue* queue){
-    if(queue->front) return false;
-    return true;
+    return queue->front == NULL;
 }
 
 void printQueue(Queue* queue){
